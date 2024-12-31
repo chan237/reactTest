@@ -35,7 +35,7 @@ function App() {
     <div className="App">
       <h1>계산기</h1>
       
-      {/* 초기값 설정 영역 */}
+      {/* 초기값 설정 */}
       <section>
         <input
           type="number"
@@ -46,7 +46,7 @@ function App() {
         <button onClick={setInitialCount}>입력</button>
       </section>
 
-      {/* 카운터 표시 */}
+      {/* 계산 값 출력력 */}
       <section>
         <Viewer count={count} />
       </section>

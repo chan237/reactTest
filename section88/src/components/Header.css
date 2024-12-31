@@ -1,0 +1,8 @@
+.Header > h1 { 
+    margin-top: 20px;
+    text-align: center;
+    color: rgb(37, 147, 255); 
+  } 
+.Header > h3 { 
+    text-align: right;
+  } 
