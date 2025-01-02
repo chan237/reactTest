@@ -24,7 +24,7 @@ const List = ({ todos, onUpdate, onDelete, onEdit }) => {
 
   return (
     <div className="List">
-      <h4>Todo List</h4>
+      <h4>게시글 목록</h4>
       <input
         value={search}
         onChange={onChangeSearch}
