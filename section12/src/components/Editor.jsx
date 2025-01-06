@@ -1,47 +1,101 @@
-import './Editor.css'; 
-import EmotionItem from "./EmotionItem"; 
-import Button from "./Button"; 
-import { useContext } from 'react'; 
-import {DiaryDispatchContext}  from "./../App"; 
- 
-const Editor = ({name})=>{ 
-  const {onCreate, onUpdate}= useContext(DiaryDispatchContext); 
- 
-  const onSubmit = (e) =>{
-    //1번일때는 onSubmit 를 생성으로 사용하고 , 2번일때는 내용수정으로 사용한다. 
-    //Button 을 두가지 용도로 사용한다.  
-if( String(name) !== "1") 
-  onCreate(new Date().getTime(), 3, "내용3번입니다.");  
- else 
-  onUpdate(1,new Date().getTime(), 3, "내용수정번입니다.");  
-    
-};  
-return ( 
-   <div className="Editor"> 
-     <section className="date_section"> 
-       <h3>오늘의 날짜</h3> 
-       <input type="date" /> 
-     </section> 
-     <section className="emotion_section"> 
-       <h3>오늘의 감정</h3> 
-       <div className="emotion_list_wrapper"> 
-         <EmotionItem /> 
-         <EmotionItem /> 
-         <EmotionItem /> 
-         <EmotionItem /> 
-         <EmotionItem /> 
-       </div> 
-     </section> 
-     <section className="content_section"> 
-       <h3>오늘의 일기</h3> 
-       <textarea placeholder="오늘 느낌은 어떨까요?"></textarea> 
-     </section> 
-     <section className="button_section"> 
-       <Button text={'취소하기'} type={'NEGATIVE'} /> 
-       <Button text={'작성완료'} type={'POSITIVE'}  onClick={onSubmit}/> 
-     </section> 
-   </div> 
-);  
+import "./Editor.css";
+import EmotionItem from "./EmotionItem";
+import Button from "./Button";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const emotionList = [
+  {
+    emotionId: 1,
+    emotionName: "완전 좋음",
+  },
+  {
+    emotionId: 2,
+    emotionName: "좋음",
+  },
+  {
+    emotionId: 3,
+    emotionName: "그럭저럭",
+  },
+  {
+    emotionId: 4,
+    emotionName: "나쁨",
+  },
+  {
+    emotionId: 5,
+    emotionName: "끔찍함",
+  },
+];
+
+const Editor = ({onSubmit}) => {
+  const nav = useNavigate(); 
+  const [input, setInput] = useState({
+    createdDate: new Date(),
+    emotionId: 1,
+    content: "",
+  }); 
+  const onChangeInput = (e)=>{
+   let name = e.target.name; 
+   let value = e.target.value; 
+
+    if(name === "createdDate"){
+      value = new Date(value); 
+    }
+    setInput({
+      ...input,
+      [name]: value,
+    });
+  };   
+
+//날자를 문자열로 리턴하는 기능
+const getStringedDate = (targetDate) => {
+  // yyyy-mm-dd
+  let year = targetDate.getFullYear();
+  let month = targetDate.getMonth() + 1;
+  let date = targetDate.getDate();
+
+  if (month < 10) {
+    month = `0${month}`;
+  }
+  if (date < 10) {
+    date = `0${date}`;
+  }
+  return `${year}-${month}-${date}`;
+};
+
+const onSubmitButtonClick = ()=>{
+  onSubmit(input);
 }; 
 
-export default Editor; 
+
+  return (
+    <div className="Editor">
+      <section className="date_section">
+        <h4>오늘의 날짜</h4>
+        <input type="date" name="createdDate" onChange={onChangeInput} 
+          value={getStringedDate(input.createdDate)}/>
+      </section>
+      <section className="emotion_section">
+        <h4>오늘의 감정</h4>
+        <div className="emotion_list_wrapper">
+          {emotionList.map((item) => (
+            <EmotionItem onClick={()=>{ onChangeInput({
+              target: {name:"emotionId", value:item.emotionId,}
+            })}} key={item.emotionId} {...item} isSelected={item.emotionId === input.emotionId}
+            />
+          ))}
+        </div>
+      </section>
+      <section className="content_section">
+        <h4>오늘의 일기</h4>
+        <textarea name="content" onChange={onChangeInput}  placeholder="오늘은 어땠나요?" />
+      </section>
+      <section className="button_section">
+        <Button onClick={()=>{nav(-1)}} text={"취소하기"} />
+        <Button onClick={onSubmitButtonClick} text={"작성완료"} type={"GREEN"} />
+      </section>
+    </div>
+  );
+};
+
+export default Editor;

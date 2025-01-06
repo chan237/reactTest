@@ -1,13 +1,13 @@
-import "./Header.css"; 
- 
-const Header = ({ title, leftChild, rightChild }) => { 
-  return ( 
-    <header className="Header"> 
-      <div className="header_left">{leftChild}</div> 
-      <div className="header_center">{title}</div> 
-      <div className="header_right">{rightChild}</div> 
-    </header> 
-  ); 
-}; 
+import './Header.css'; 
+
+const Header = ({title, left, right})=>{
+    return(
+        <header className="header">
+            <div>{left}</div>
+            <div className="title">{title}</div>
+            <div>{right}</div>
+        </header>
+    ); 
+};
 
 export default Header; 
